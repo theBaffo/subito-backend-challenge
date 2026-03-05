@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/theBaffo/subito-backend-challenge/internal/domain"
 	"github.com/theBaffo/subito-backend-challenge/internal/service"
-	"github.com/gin-gonic/gin"
 )
 
 // orderServicer is the interface the handler depends on.
@@ -54,6 +54,6 @@ func (h *OrderHandler) GetOrder(c *gin.Context) {
 		c.JSON(domainErrorToStatus(err), errorResponse(err.Error()))
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, order)
 }

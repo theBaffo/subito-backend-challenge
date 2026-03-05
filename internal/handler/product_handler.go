@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/theBaffo/subito-backend-challenge/internal/domain"
 	"github.com/gin-gonic/gin"
+	"github.com/theBaffo/subito-backend-challenge/internal/domain"
 )
 
 // productServicer is the interface the handler depends on.

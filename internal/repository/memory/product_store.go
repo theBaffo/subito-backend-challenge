@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/theBaffo/subito-backend-challenge/internal/domain"
 	"github.com/shopspring/decimal"
+	"github.com/theBaffo/subito-backend-challenge/internal/domain"
 )
 
 // ProductStore is a thread-safe, in-memory implementation of ProductRepository.
@@ -46,7 +46,7 @@ func (s *ProductStore) FindByID(_ context.Context, id string) (*domain.Product, 
 	if !ok {
 		return nil, domain.ErrProductNotFound
 	}
-	
+
 	return &p, nil
 }
 

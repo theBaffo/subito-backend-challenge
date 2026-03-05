@@ -11,8 +11,8 @@ type VATRate struct {
 
 // Common Italian VAT rates.
 var (
-	VATStandard = VATRate{Name: "standard", Rate: decimal.NewFromFloat(0.22)} // Most goods
-	VATReduced  = VATRate{Name: "reduced", Rate: decimal.NewFromFloat(0.10)}  // Food, tourism
+	VATStandard = VATRate{Name: "standard", Rate: decimal.NewFromFloat(0.22)}      // Most goods
+	VATReduced  = VATRate{Name: "reduced", Rate: decimal.NewFromFloat(0.10)}       // Food, tourism
 	VATSuper    = VATRate{Name: "super_reduced", Rate: decimal.NewFromFloat(0.04)} // Essential goods
 )
 

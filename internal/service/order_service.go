@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/theBaffo/subito-backend-challenge/internal/domain"
-	"github.com/theBaffo/subito-backend-challenge/internal/repository"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
+	"github.com/theBaffo/subito-backend-challenge/internal/domain"
+	"github.com/theBaffo/subito-backend-challenge/internal/repository"
 )
 
 // CreateOrderRequest is the input DTO for creating a new order.

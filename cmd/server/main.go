@@ -4,11 +4,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/theBaffo/subito-backend-challenge/internal/handler"
 	"github.com/theBaffo/subito-backend-challenge/internal/middleware"
 	"github.com/theBaffo/subito-backend-challenge/internal/repository/memory"
 	"github.com/theBaffo/subito-backend-challenge/internal/service"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -43,7 +43,7 @@ func main() {
 	}
 
 	log.Println("Purchase Cart Service starting on :8080")
-	
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("server error: %v", err)
 	}

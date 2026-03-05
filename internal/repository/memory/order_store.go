@@ -37,6 +37,6 @@ func (s *OrderStore) FindByID(_ context.Context, id string) (*domain.Order, erro
 	if !ok {
 		return nil, domain.ErrOrderNotFound
 	}
-	
+
 	return &o, nil
 }

@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/theBaffo/subito-backend-challenge/internal/domain"
-	"github.com/theBaffo/subito-backend-challenge/internal/service"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"github.com/theBaffo/subito-backend-challenge/internal/domain"
+	"github.com/theBaffo/subito-backend-challenge/internal/service"
 )
 
 // ---------------------------------------------------------------------------
