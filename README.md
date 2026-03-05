@@ -1,4 +1,4 @@
-# Purchase Cart Service
+# Purchase Cart Service - Subito Backend Challenge
 
 A RESTful purchase cart service built with Go and [Gin](https://github.com/gin-gonic/gin).
 
@@ -64,7 +64,7 @@ curl http://localhost:8080/v1/orders/ord-<id>
 sh scripts/tests.sh
 
 # Run locally (requires Go 1.22+)
-go test ./... -v -race
+go test ./... -v
 ```
 
 ---
