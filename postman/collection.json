@@ -1,0 +1,467 @@
+{
+  "info": {
+    "_postman_id": "f1e2d3c4-b5a6-7890-abcd-123456789abc",
+    "name": "Purchase Cart Service",
+    "description": "Complete collection for the Purchase Cart Service API.\n\nThe **Create Order** request automatically saves the returned `id` into the `orderId` environment variable, so **Get Order by ID** works without any manual copy-paste.\n\n## Seeded products\n| ID | Name | Price | VAT |\n|---|---|---|---|\n| prod-001 | Mechanical Keyboard | €129.99 | 22% |\n| prod-002 | USB-C Hub | €49.99 | 22% |\n| prod-003 | Laptop Stand | €39.99 | 22% |\n| prod-004 | Artisan Coffee Beans | €14.90 | 10% |\n| prod-005 | Whole Grain Bread | €3.50 | 4% |",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "description": "Override via the active environment"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Verifies the service is up and reachable."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"status\": \"ok\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Body contains status ok', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('ok');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "products"]
+            },
+            "description": "Returns the full product catalogue. The service starts with five seeded products."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"products\": [\n    {\n      \"id\": \"prod-001\",\n      \"name\": \"Mechanical Keyboard\",\n      \"description\": \"Full-size mechanical keyboard with Cherry MX switches\",\n      \"gross_price\": \"129.99\",\n      \"vat_rate\": { \"name\": \"standard\", \"rate\": \"0.22\" },\n      \"category\": \"electronics\"\n    }\n  ]\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response contains products array', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('products');",
+                  "    pm.expect(json.products).to.be.an('array');",
+                  "});",
+                  "pm.test('Returns at least one product', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.products.length).to.be.above(0);",
+                  "});",
+                  "pm.test('Each product has required fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    json.products.forEach(p => {",
+                  "        pm.expect(p).to.have.all.keys('id', 'name', 'description', 'gross_price', 'vat_rate', 'category');",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "products", "{{productId}}"]
+            },
+            "description": "Returns a single product. The `productId` variable defaults to `prod-001` in the environment. Change it to any of: `prod-001`, `prod-002`, `prod-003`, `prod-004`, `prod-005`."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"prod-001\",\n  \"name\": \"Mechanical Keyboard\",\n  \"description\": \"Full-size mechanical keyboard with Cherry MX switches\",\n  \"gross_price\": \"129.99\",\n  \"vat_rate\": { \"name\": \"standard\", \"rate\": \"0.22\" },\n  \"category\": \"electronics\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"product not found\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Product has required fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.all.keys('id', 'name', 'description', 'gross_price', 'vat_rate', 'category');",
+                  "});",
+                  "pm.test('Product ID matches request', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.eql(pm.environment.get('productId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Product by ID — Not Found",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/products/prod-999",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "products", "prod-999"]
+            },
+            "description": "Demonstrates the 404 response when requesting a product ID that does not exist."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 404', () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Response contains error field', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"product_id\": \"prod-001\", \"quantity\": 1 },\n    { \"product_id\": \"prod-004\", \"quantity\": 3 },\n    { \"product_id\": \"prod-005\", \"quantity\": 2 }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders"]
+            },
+            "description": "Creates a new order. The response `id` is automatically saved to the `orderId` environment variable, so **Get Order by ID** works immediately after without any manual copy-paste."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"ord-7f3a1b2c\",\n  \"status\": \"confirmed\",\n  \"created_at\": \"2026-03-05T10:00:00Z\",\n  \"items\": [\n    {\n      \"product_id\": \"prod-001\",\n      \"name\": \"Mechanical Keyboard\",\n      \"quantity\": 1,\n      \"unit_price\": \"129.99\",\n      \"total_price\": \"129.99\",\n      \"vat_rate\": \"0.22\",\n      \"vat_amount\": \"23.51\"\n    },\n    {\n      \"product_id\": \"prod-004\",\n      \"name\": \"Artisan Coffee Beans\",\n      \"quantity\": 3,\n      \"unit_price\": \"14.90\",\n      \"total_price\": \"44.70\",\n      \"vat_rate\": \"0.10\",\n      \"vat_amount\": \"4.06\"\n    },\n    {\n      \"product_id\": \"prod-005\",\n      \"name\": \"Whole Grain Bread\",\n      \"quantity\": 2,\n      \"unit_price\": \"3.50\",\n      \"total_price\": \"7.00\",\n      \"vat_rate\": \"0.04\",\n      \"vat_amount\": \"0.27\"\n    }\n  ],\n  \"total_price\": \"181.69\",\n  \"total_vat\": \"27.84\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has required top-level fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.all.keys('id', 'status', 'created_at', 'items', 'total_price', 'total_vat');",
+                  "});",
+                  "",
+                  "pm.test('Order status is confirmed', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('confirmed');",
+                  "});",
+                  "",
+                  "pm.test('Each item has required fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    json.items.forEach(item => {",
+                  "        pm.expect(item).to.have.all.keys(",
+                  "            'product_id', 'name', 'quantity',",
+                  "            'unit_price', 'total_price', 'vat_rate', 'vat_amount'",
+                  "        );",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test('total_price equals sum of item total_prices', () => {",
+                  "    const json = pm.response.json();",
+                  "    const itemsSum = json.items",
+                  "        .reduce((acc, item) => acc + parseFloat(item.total_price), 0)",
+                  "        .toFixed(2);",
+                  "    pm.expect(parseFloat(json.total_price).toFixed(2)).to.eql(itemsSum);",
+                  "});",
+                  "",
+                  "pm.test('total_vat equals sum of item vat_amounts', () => {",
+                  "    const json = pm.response.json();",
+                  "    const vatSum = json.items",
+                  "        .reduce((acc, item) => acc + parseFloat(item.vat_amount), 0)",
+                  "        .toFixed(2);",
+                  "    pm.expect(parseFloat(json.total_vat).toFixed(2)).to.eql(vatSum);",
+                  "});",
+                  "",
+                  "// Auto-save order ID for use in subsequent requests",
+                  "const json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.environment.set('orderId', json.id);",
+                  "    console.log('Saved orderId:', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Order — Empty Items (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": []\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders"]
+            },
+            "description": "Demonstrates the 422 response when submitting an order with an empty items list."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 422', () => {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test('Response contains error field', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Order — Invalid Quantity (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"product_id\": \"prod-001\", \"quantity\": 0 }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders"]
+            },
+            "description": "Demonstrates the 422 response when a line item has a quantity of zero or less."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 422', () => {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test('Response contains error field', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Order — Product Not Found (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"product_id\": \"prod-999\", \"quantity\": 1 }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders"]
+            },
+            "description": "Demonstrates the 404 response when an order references a product ID that does not exist."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 404', () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Response contains error field', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders", "{{orderId}}"]
+            },
+            "description": "Retrieves an order by ID. Run **Create Order** first — the `orderId` variable is populated automatically by its test script."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has required fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.all.keys('id', 'status', 'created_at', 'items', 'total_price', 'total_vat');",
+                  "});",
+                  "pm.test('Order ID matches request', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.eql(pm.environment.get('orderId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Order by ID — Not Found",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/orders/ord-doesnotexist",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "orders", "ord-doesnotexist"]
+            },
+            "description": "Demonstrates the 404 response when requesting an order ID that does not exist."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 404', () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Response contains error field', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

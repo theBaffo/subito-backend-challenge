@@ -1,0 +1,29 @@
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "Purchase Cart Service — Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "default",
+      "enabled": true,
+      "description": "Populated automatically by the 'Create Order' request"
+    },
+    {
+      "key": "productId",
+      "value": "prod-001",
+      "type": "default",
+      "enabled": true,
+      "description": "Used by 'Get Product by ID'. Change to any seeded ID: prod-001..prod-005"
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-03-05T00:00:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}

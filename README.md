@@ -1,4 +1,4 @@
-# Purchase Cart Service - Subito Backend Challenge
+# Purchase Cart Service
 
 A RESTful purchase cart service built with Go and [Gin](https://github.com/gin-gonic/gin).
 
@@ -15,6 +15,7 @@ per-item unit price, line total, VAT rate, and VAT amount.
 - [API Reference](#api-reference)
 - [Architecture & Design Decisions](#architecture--design-decisions)
 - [Project Structure](#project-structure)
+- [Postman Collection](#postman-collection)
 - [Potential Evolutions](#potential-evolutions)
 
 ---
@@ -260,11 +261,47 @@ existing orders.
 ├── scripts/
 │   ├── run.sh                            # Build & run in Docker
 │   └── tests.sh                          # Run tests in Docker
+├── postman/
+│   ├── collection.json               # All requests + automated tests
+│   └── environment.local.json        # Local env variables
 ├── Dockerfile                            # Multi-stage build
 ├── docker-compose.yml
 ├── go.mod
 └── README.md
 ```
+
+---
+
+## Postman Collection
+
+A ready-to-use Postman collection and environment file are provided under `postman/`.
+
+| File | Purpose |
+|------|---------|
+| `postman/collection.json` | All requests, example responses, and automated tests |
+| `postman/environment.local.json` | Environment variables for local development |
+
+### Importing into Postman
+
+1. Open Postman and click **Import**
+2. Select both `postman/collection.json` and `postman/environment.local.json`
+3. In the top-right environment dropdown, select **Purchase Cart Service — Local**
+4. Start the service (`sh scripts/run.sh`), then run any request
+
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `baseUrl` | `http://localhost:8080` | Service base URL |
+| `productId` | `prod-001` | Used by *Get Product by ID*; change to any of `prod-001`…`prod-005` |
+| `orderId` | *(empty)* | Auto-populated by the *Create Order* test script |
+
+### Automated tests
+
+Every request in the collection includes a **Tests** script. Run them all at once via
+the Postman **Collection Runner** (▶ Run) to validate the full API in one click.
+The *Create Order* request also captures the returned `id` into `orderId` automatically,
+so *Get Order by ID* works immediately after without any manual copy-paste.
 
 ---
 
