@@ -12,6 +12,8 @@ export interface OrderItemResponse {
   linePrice: number;
   /** Total VAT for this line (unitVat × quantity) */
   lineVat: number;
+  /** Total gross for this line (linePrice + lineVat) */
+  lineGross: number;
   /** VAT rate as a percentage (e.g. 22 for 22%) */
   vatRate: number;
 }
@@ -23,6 +25,8 @@ export interface OrderResponse {
   totalPrice: number;
   /** Sum of all line VATs in euros */
   totalVat: number;
+  /** Total gross amount (totalPrice + totalVat) */
+  totalGross: number;
   createdAt: string;
 }
 
@@ -35,6 +39,7 @@ function toOrderItemResponse(item: OrderItem): OrderItemResponse {
     unitVat: item.unitVatInCents / 100,
     linePrice: (item.unitPriceInCents * item.quantity) / 100,
     lineVat: (item.unitVatInCents * item.quantity) / 100,
+    lineGross: ((item.unitPriceInCents + item.unitVatInCents) * item.quantity) / 100,
     vatRate: item.vatRate,
   };
 }
@@ -45,6 +50,7 @@ export function toOrderResponse(order: Order): OrderResponse {
     items: order.items.map(toOrderItemResponse),
     totalPrice: order.totalPriceInCents / 100,
     totalVat: order.totalVatInCents / 100,
+    totalGross: (order.totalPriceInCents + order.totalVatInCents) / 100,
     createdAt: order.createdAt.toISOString(),
   };
 }

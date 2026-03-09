@@ -25,6 +25,7 @@ describe('Orders (e2e)', () => {
         id: expect.any(String),
         totalPrice: expect.any(Number),
         totalVat: expect.any(Number),
+        totalGross: expect.any(Number),
         createdAt: expect.any(String),
         items: expect.any(Array),
       });
@@ -39,6 +40,7 @@ describe('Orders (e2e)', () => {
 
       expect(body.totalPrice).toBe(899.99);
       expect(body.totalVat).toBe(198);
+      expect(body.totalGross).toBe(1097.99);
       expect(body.items[0]).toMatchObject({
         productId: 'prod-1',
         productName: 'Laptop',
@@ -47,6 +49,7 @@ describe('Orders (e2e)', () => {
         unitVat: 198,
         linePrice: 899.99,
         lineVat: 198,
+        lineGross: 1097.99,
         vatRate: 22,
       });
     });
@@ -61,8 +64,10 @@ describe('Orders (e2e)', () => {
 
       expect(body.items[0].linePrice).toBe(104.97);
       expect(body.items[0].lineVat).toBe(4.2);
+      expect(body.items[0].lineGross).toBe(109.17);
       expect(body.totalPrice).toBe(104.97);
       expect(body.totalVat).toBe(4.2);
+      expect(body.totalGross).toBe(109.17);
     });
 
     it('sums totals correctly across items with different VAT rates', async () => {
@@ -81,6 +86,7 @@ describe('Orders (e2e)', () => {
 
       expect(body.totalPrice).toBe(969.97);
       expect(body.totalVat).toBe(200.8);
+      expect(body.totalGross).toBe(1170.77);
       expect(body.items).toHaveLength(2);
     });
 

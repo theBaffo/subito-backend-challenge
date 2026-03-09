@@ -32,6 +32,11 @@ describe('toOrderResponse', () => {
     expect(toOrderResponse(makeOrder()).totalVat).toBe(396);
   });
 
+  it('computes totalGross as totalPrice + totalVat', () => {
+    // (179998 + 39600) / 100 = 2195.98
+    expect(toOrderResponse(makeOrder()).totalGross).toBe(2195.98);
+  });
+
   it('serializes createdAt as an ISO string', () => {
     expect(toOrderResponse(makeOrder()).createdAt).toBe(
       '2024-01-01T00:00:00.000Z',
@@ -59,6 +64,12 @@ describe('toOrderResponse', () => {
       const { items } = toOrderResponse(makeOrder());
       // 19800 cents × 2 = 39600 cents = 396 €
       expect(items[0].lineVat).toBe(396);
+    });
+
+    it('computes lineGross as linePrice + lineVat', () => {
+      const { items } = toOrderResponse(makeOrder());
+      // (89999 + 19800) × 2 / 100 = 2195.98 €
+      expect(items[0].lineGross).toBe(2195.98);
     });
 
     it('passes vatRate through unchanged', () => {

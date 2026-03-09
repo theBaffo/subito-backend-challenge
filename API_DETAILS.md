@@ -53,6 +53,7 @@
       "unitVat": 198.00,
       "linePrice": 899.99,
       "lineVat": 198.00,
+      "lineGross": 1097.99,
       "vatRate": 22
     },
     {
@@ -63,13 +64,15 @@
       "unitVat": 1.40,
       "linePrice": 69.98,
       "lineVat": 2.80,
+      "lineGross": 72.78,
       "vatRate": 4
     }
   ],
   "totalPrice": 969.97,
   "totalVat": 200.80,
+  "totalGross": 1170.77,
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-All monetary values in responses are in euros. `linePrice` and `lineVat` are the per-line totals (`unit × quantity`). `totalPrice` and `totalVat` are the sums across all lines.
+All monetary values in responses are in euros. `linePrice` and `lineVat` are the per-line totals (`unit × quantity`); `lineGross` is their sum. `totalPrice`, `totalVat`, and `totalGross` are the respective sums across all lines.

@@ -31,11 +31,13 @@ const expectedOrderResponse = {
       unitVat: 198,
       linePrice: 899.99,
       lineVat: 198,
+      lineGross: 1097.99,
       vatRate: 22,
     },
   ],
   totalPrice: 899.99,
   totalVat: 198,
+  totalGross: 1097.99,
   createdAt: '2024-01-01T00:00:00.000Z',
 };
 
