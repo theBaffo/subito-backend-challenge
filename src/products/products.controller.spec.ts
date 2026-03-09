@@ -55,6 +55,7 @@ describe('ProductsController', () => {
         vatRate: 22,
         category: 'Electronics',
       });
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(service.findById).toHaveBeenCalledWith('prod-1');
     });
 

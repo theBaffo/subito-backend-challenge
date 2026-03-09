@@ -63,6 +63,7 @@ describe('OrdersController', () => {
       const result = controller.create(dto);
 
       expect(result).toEqual(expectedOrderResponse);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(service.create).toHaveBeenCalledWith(dto);
     });
 
@@ -86,6 +87,7 @@ describe('OrdersController', () => {
       const result = controller.findOne('order-uuid');
 
       expect(result).toEqual(expectedOrderResponse);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(service.findById).toHaveBeenCalledWith('order-uuid');
     });
 

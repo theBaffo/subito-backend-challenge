@@ -31,6 +31,7 @@ describe('ProductsService', () => {
       const result = service.findAll();
 
       expect(result).toEqual([mockProduct]);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.findAll).toHaveBeenCalledTimes(1);
     });
   });
@@ -42,6 +43,7 @@ describe('ProductsService', () => {
       const result = service.findById('prod-1');
 
       expect(result).toEqual(mockProduct);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.findById).toHaveBeenCalledWith('prod-1');
     });
 

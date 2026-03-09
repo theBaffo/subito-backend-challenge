@@ -157,6 +157,7 @@ describe('OrdersService', () => {
 
       service.create({ items: [{ productId: 'prod-1', quantity: 1 }] });
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.save).toHaveBeenCalledTimes(1);
     });
 
@@ -178,6 +179,7 @@ describe('OrdersService', () => {
       const result = service.findById('order-uuid');
 
       expect(result).toEqual(mockOrder);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.findById).toHaveBeenCalledWith('order-uuid');
     });
 
@@ -197,6 +199,7 @@ describe('OrdersService', () => {
       const result = service.findAll();
 
       expect(result).toEqual([mockOrder]);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.findAll).toHaveBeenCalledTimes(1);
     });
   });
