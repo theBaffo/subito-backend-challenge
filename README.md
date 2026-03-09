@@ -15,7 +15,19 @@ npm install
 npm run start
 ```
 
-The service listens on port `3000` by default. The port can be overridden with the `PORT` environment variable.
+The service listens on port `3000` by default. To use a different port, copy `.env.sample` to `.env` and set the value before starting:
+
+```bash
+cp .env.sample .env
+# edit .env and change PORT if needed
+npm run start
+```
+
+Alternatively, set the variable inline without a file:
+
+```bash
+PORT=8080 npm run start
+```
 
 ### With Docker
 
