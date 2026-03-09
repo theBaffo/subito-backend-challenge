@@ -5,3 +5,4 @@ IMAGE_NAME="subito-backend-challenge-test"
 
 docker build -t "$IMAGE_NAME" --target builder .
 docker run --rm "$IMAGE_NAME" npm test
+docker run --rm "$IMAGE_NAME" npm run test:e2e
