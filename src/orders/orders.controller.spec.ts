@@ -72,7 +72,9 @@ describe('OrdersController', () => {
       });
 
       expect(() =>
-        controller.create({ items: [{ productId: 'nonexistent', quantity: 1 }] }),
+        controller.create({
+          items: [{ productId: 'nonexistent', quantity: 1 }],
+        }),
       ).toThrow(NotFoundException);
     });
   });
@@ -92,7 +94,9 @@ describe('OrdersController', () => {
         throw new NotFoundException('Order with id "nonexistent" not found');
       });
 
-      expect(() => controller.findOne('nonexistent')).toThrow(NotFoundException);
+      expect(() => controller.findOne('nonexistent')).toThrow(
+        NotFoundException,
+      );
     });
   });
 

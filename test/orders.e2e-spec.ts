@@ -132,7 +132,10 @@ describe('Orders (e2e)', () => {
     it('returns 400 when unknown fields are sent', async () => {
       await request(app.getHttpServer())
         .post('/orders')
-        .send({ items: [{ productId: 'prod-1', quantity: 1 }], unknownField: 'value' })
+        .send({
+          items: [{ productId: 'prod-1', quantity: 1 }],
+          unknownField: 'value',
+        })
         .expect(400);
     });
 

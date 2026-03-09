@@ -39,7 +39,8 @@ function toOrderItemResponse(item: OrderItem): OrderItemResponse {
     unitVat: item.unitVatInCents / 100,
     linePrice: (item.unitPriceInCents * item.quantity) / 100,
     lineVat: (item.unitVatInCents * item.quantity) / 100,
-    lineGross: ((item.unitPriceInCents + item.unitVatInCents) * item.quantity) / 100,
+    lineGross:
+      ((item.unitPriceInCents + item.unitVatInCents) * item.quantity) / 100,
     vatRate: item.vatRate,
   };
 }

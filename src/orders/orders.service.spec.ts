@@ -63,7 +63,9 @@ describe('OrdersService', () => {
     it('maps product data to order items correctly', () => {
       productsService.findById.mockReturnValue(laptop);
 
-      const order = service.create({ items: [{ productId: 'prod-1', quantity: 2 }] });
+      const order = service.create({
+        items: [{ productId: 'prod-1', quantity: 2 }],
+      });
 
       expect(order.items).toEqual([
         {
@@ -81,7 +83,9 @@ describe('OrdersService', () => {
       // 3499 * 0.04 = 139.96 → should round to 140
       productsService.findById.mockReturnValue(book);
 
-      const order = service.create({ items: [{ productId: 'prod-5', quantity: 1 }] });
+      const order = service.create({
+        items: [{ productId: 'prod-5', quantity: 1 }],
+      });
 
       expect(order.items[0].unitVatInCents).toBe(140);
     });
@@ -90,7 +94,9 @@ describe('OrdersService', () => {
       // 1299 * 0.10 = 129.9 → should round to 130
       productsService.findById.mockReturnValue(coffee);
 
-      const order = service.create({ items: [{ productId: 'prod-4', quantity: 1 }] });
+      const order = service.create({
+        items: [{ productId: 'prod-4', quantity: 1 }],
+      });
 
       expect(order.items[0].unitVatInCents).toBe(130);
     });
@@ -98,7 +104,7 @@ describe('OrdersService', () => {
     it('computes totalPriceInCents as the sum of (unitPrice × quantity) across all items', () => {
       productsService.findById
         .mockReturnValueOnce(laptop) // 89999 × 1
-        .mockReturnValueOnce(book);  // 3499  × 2
+        .mockReturnValueOnce(book); // 3499  × 2
 
       const order = service.create({
         items: [
@@ -113,7 +119,7 @@ describe('OrdersService', () => {
     it('computes totalVatInCents as the sum of (unitVat × quantity) across all items', () => {
       productsService.findById
         .mockReturnValueOnce(laptop) // unitVat: 19800, × 1
-        .mockReturnValueOnce(book);  // unitVat: 140,   × 2
+        .mockReturnValueOnce(book); // unitVat: 140,   × 2
 
       const order = service.create({
         items: [
@@ -128,7 +134,9 @@ describe('OrdersService', () => {
     it('assigns a non-empty string ID to the order', () => {
       productsService.findById.mockReturnValue(laptop);
 
-      const order = service.create({ items: [{ productId: 'prod-1', quantity: 1 }] });
+      const order = service.create({
+        items: [{ productId: 'prod-1', quantity: 1 }],
+      });
 
       expect(typeof order.id).toBe('string');
       expect(order.id).not.toBe('');
