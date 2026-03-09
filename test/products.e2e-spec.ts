@@ -1,7 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import type { ProductResponse } from '../src/products/product.response';
 import { createTestApp } from './test-app.helper';
+
+interface ErrorResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+}
 
 describe('Products (e2e)', () => {
   let app: INestApplication<App>;
@@ -16,7 +25,9 @@ describe('Products (e2e)', () => {
 
   describe('GET /products', () => {
     it('returns 200 with the full product catalogue', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ProductResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/products')
         .expect(200);
 
@@ -25,7 +36,9 @@ describe('Products (e2e)', () => {
     });
 
     it('returns products with the expected shape', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ProductResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/products')
         .expect(200);
 
@@ -39,27 +52,33 @@ describe('Products (e2e)', () => {
     });
 
     it('returns prices in euros, not cents', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ProductResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/products')
         .expect(200);
 
-      const laptop = body.find((p: { id: string }) => p.id === 'prod-1');
-      expect(laptop.price).toBe(899.99);
+      const laptop = body.find((p) => p.id === 'prod-1');
+      expect(laptop?.price).toBe(899.99);
     });
 
     it('returns vatRate as a percentage', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ProductResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/products')
         .expect(200);
 
-      const laptop = body.find((p: { id: string }) => p.id === 'prod-1');
-      expect(laptop.vatRate).toBe(22);
+      const laptop = body.find((p) => p.id === 'prod-1');
+      expect(laptop?.vatRate).toBe(22);
     });
   });
 
   describe('GET /products/:id', () => {
     it('returns 200 with the correct product', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ProductResponse } = await request(
+        app.getHttpServer(),
+      )
         .get('/products/prod-5')
         .expect(200);
 
@@ -73,7 +92,9 @@ describe('Products (e2e)', () => {
     });
 
     it('returns 404 for an unknown product ID', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ErrorResponse } = await request(
+        app.getHttpServer(),
+      )
         .get('/products/nonexistent')
         .expect(404);
 

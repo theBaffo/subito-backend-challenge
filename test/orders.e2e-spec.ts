@@ -1,7 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import type { OrderResponse } from '../src/orders/order.response';
 import { createTestApp } from './test-app.helper';
+
+interface ErrorResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+}
+
+interface ValidationErrorResponse {
+  statusCode: number;
+  message: string | string[];
+  error: string;
+}
 
 describe('Orders (e2e)', () => {
   let app: INestApplication<App>;
@@ -16,7 +31,9 @@ describe('Orders (e2e)', () => {
 
   describe('POST /orders', () => {
     it('returns 201 with a well-formed order response', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-1', quantity: 1 }] })
         .expect(201);
@@ -33,7 +50,9 @@ describe('Orders (e2e)', () => {
 
     it('returns correct prices and VAT for a single item', async () => {
       // Laptop: net 899.99 €, 22% VAT → VAT = Math.round(89999 * 0.22) / 100 = 198.00 €
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-1', quantity: 1 }] })
         .expect(201);
@@ -57,7 +76,9 @@ describe('Orders (e2e)', () => {
     it('multiplies line totals correctly when quantity > 1', async () => {
       // Book: net 34.99 €, 4% VAT → VAT = Math.round(3499 * 0.04) / 100 = 1.40 €
       // Quantity 3 → linePrice = 104.97 €, lineVat = 4.20 €
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-5', quantity: 3 }] })
         .expect(201);
@@ -74,7 +95,9 @@ describe('Orders (e2e)', () => {
       // Laptop  (22%): net 899.99 €, VAT 198.00 € — ×1
       // Book     (4%): net  34.99 €, VAT   1.40 € — ×2 → net 69.98 €, VAT 2.80 €
       // Total net: 969.97 €  |  Total VAT: 200.80 €
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({
           items: [
@@ -91,7 +114,9 @@ describe('Orders (e2e)', () => {
     });
 
     it('includes the vatRate on each item in the response', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-4', quantity: 1 }] })
         .expect(201);
@@ -100,7 +125,9 @@ describe('Orders (e2e)', () => {
     });
 
     it('returns 400 when items array is empty', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ValidationErrorResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [] })
         .expect(400);
@@ -140,7 +167,9 @@ describe('Orders (e2e)', () => {
     });
 
     it('returns 404 when a product does not exist', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ErrorResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'nonexistent', quantity: 1 }] })
         .expect(404);
@@ -151,12 +180,16 @@ describe('Orders (e2e)', () => {
 
   describe('GET /orders/:id', () => {
     it('returns 200 with the order that was just created', async () => {
-      const { body: created } = await request(app.getHttpServer())
+      const { body: created }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-2', quantity: 1 }] })
         .expect(201);
 
-      const { body: fetched } = await request(app.getHttpServer())
+      const { body: fetched }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .get(`/orders/${created.id}`)
         .expect(200);
 
@@ -165,7 +198,9 @@ describe('Orders (e2e)', () => {
     });
 
     it('returns 404 for an unknown order ID', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: ErrorResponse } = await request(
+        app.getHttpServer(),
+      )
         .get('/orders/nonexistent')
         .expect(404);
 
@@ -175,7 +210,9 @@ describe('Orders (e2e)', () => {
 
   describe('GET /orders', () => {
     it('returns 200 with an array', async () => {
-      const { body } = await request(app.getHttpServer())
+      const { body }: { body: OrderResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/orders')
         .expect(200);
 
@@ -183,16 +220,20 @@ describe('Orders (e2e)', () => {
     });
 
     it('includes orders that were previously created', async () => {
-      const { body: created } = await request(app.getHttpServer())
+      const { body: created }: { body: OrderResponse } = await request(
+        app.getHttpServer(),
+      )
         .post('/orders')
         .send({ items: [{ productId: 'prod-3', quantity: 1 }] })
         .expect(201);
 
-      const { body: all } = await request(app.getHttpServer())
+      const { body: all }: { body: OrderResponse[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/orders')
         .expect(200);
 
-      expect(all.some((o: { id: string }) => o.id === created.id)).toBe(true);
+      expect(all.some((o) => o.id === created.id)).toBe(true);
     });
   });
 });
